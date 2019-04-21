@@ -1,0 +1,56 @@
+﻿@using BlazorSample.Shared.ViewModels
+@page "/employee/index"
+@inject HttpClient Http
+
+<h1>Employee Data</h1>
+
+<p>This component demonstrates fetching Employee data from the server.</p>
+
+<p>
+    <a href="/employee/add">Create New</a>
+</p>
+
+@if (empList == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class='table'>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Gender</th>
+                <th>Department</th>
+                <th>City</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var emp in empList)
+            {
+                <tr>
+                    <td>@emp.EmployeeId</td>
+                    <td>@emp.Name</td>
+                    <td>@emp.Gender</td>
+                    <td>@emp.Department</td>
+                    <td>@emp.City</td>
+                    <td>
+                        <a href='/employee/edit/@emp.EmployeeId'>Edit</a>  |
+                        <a href='/employee/delete/@emp.EmployeeId'>Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@functions {
+    List<EmployeeViewModel> empList;
+
+    protected override async Task OnInitAsync()
+    {
+        empList = await Http.GetJsonAsync<List<EmployeeViewModel>>("/api/Employee/Index");
+    }
+
+}

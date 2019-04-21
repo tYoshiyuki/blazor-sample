@@ -1,0 +1,58 @@
+﻿@using BlazorSample.Shared.ViewModels
+@page "/employee/delete/{empID}"
+@inject HttpClient Http
+@inject Microsoft.AspNetCore.Components.Services.IUriHelper UriHelper
+
+<h2>Delete</h2>
+<h3>Are you sure you want to delete employee with id : @empID</h3>
+<br />
+
+<div class="col-md-4">
+    <table class="table">
+        <tr>
+            <td>Name</td>
+            <td>@emp.Name</td>
+        </tr>
+        <tr>
+            <td>Gender</td>
+            <td>@emp.Gender</td>
+        </tr>
+        <tr>
+            <td>Department</td>
+            <td>@emp.Department</td>
+        </tr>
+        <tr>
+            <td>City</td>
+            <td>@emp.City</td>
+        </tr>
+    </table>
+    <div class="form-group">
+        <input type="submit" value="Delete" onclick="@(async () => await DeleteEmployee())" class="btn btn-default" />
+        <input type="submit" value="Cancel" onclick="@Cancel" class="btn" />
+    </div>
+</div>
+
+@functions {
+
+    [Parameter]
+    string empID { get; set; }
+
+    EmployeeViewModel emp = new EmployeeViewModel();
+
+    protected override async Task OnInitAsync()
+    {
+        emp = await Http.GetJsonAsync<EmployeeViewModel>("/api/Employee/Details/" + Convert.ToInt32(empID));
+    }
+
+    private async Task DeleteEmployee()
+    {
+        await Http.DeleteAsync("/api/Employee/Delete/" + Convert.ToInt32(empID));
+        UriHelper.NavigateTo("/employee/index");
+    }
+
+    private void Cancel()
+    {
+        UriHelper.NavigateTo("/employee/index");
+    }
+
+}
