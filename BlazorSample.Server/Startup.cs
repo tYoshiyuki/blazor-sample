@@ -32,6 +32,7 @@ namespace BlazorSample.Server
             services.AddDbContext<BlazorSampleContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<IEmployeeRepository, EmployeeRepository>();
             services.AddMvc().AddNewtonsoftJson();
+            services.AddProgressiveWebApp();
             services.AddResponseCompression(opts =>
             {
                 opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
